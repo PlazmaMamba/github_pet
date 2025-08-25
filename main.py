@@ -125,7 +125,7 @@ def get_adjusted_contributions(response, pet_start_date):
             
             # If this day is on or after pet start date, subtract 1 for the bot commit
             if day_date >= pet_start_date:
-                adjusted_count = max(0, contribution_count - 1)  
+                adjusted_count = contribution_count  
             else:
                 adjusted_count = contribution_count
             
