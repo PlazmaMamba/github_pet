@@ -54,7 +54,7 @@ def load_pet_save():
 
     try:
         if os.path.exists(save_file_path):
-            with open(save_file_path, 'r') as f:
+            with open(save_file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 for key, value in default_data.items():
                     if key not in data:
@@ -68,8 +68,8 @@ def load_pet_save():
     
 def save_pet_data(data):
     try:
-        with open(save_file_path, 'w') as f:
-            json.dump(data, f, indent=2)
+        with open(save_file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
         print(f"Saved pet data to {save_file_path}")
     except Exception as ex:
         print(f"Error saving pet data: {ex}")
@@ -408,6 +408,112 @@ def determine_final_stage(pet_data, days_alive, total_experience, current_streak
     else:
         return stage_after_devolution, devolution_msg
 
+def update_readme(pet_data):
+    """Update README.md with pet status"""
+    try:
+        from datetime import datetime
+        
+        stage_emojis = {
+            "EGG": "🥚",
+            "HATCHLING": "🐣", 
+            "YOUNG": "🐤",
+            "ADULT": "🐦",
+            "LEGENDARY": "🦅"
+        }
+        
+        health_indicators = {
+            "HEALTHY": "✨",
+            "GOOD": "😊",
+            "TIRED": "😴",
+            "WEAK": "😵",
+            "CRITICAL": "🆘",
+            "DEAD": "💀"
+        }
+        
+        pet_emoji = stage_emojis.get(pet_data['current_stage'], '🥚')
+        health_emoji = health_indicators.get(pet_data.get('health_state', 'HEALTHY'), '😊')
+        
+        achievements_list = pet_data.get('achievements', [])
+        achievement_badges = {
+            "first_hatch": "🐣",
+            "week_streak": "🔥",
+            "month_streak": "💫",
+            "ancient": "🏛️",
+            "legendary": "👑",
+            "dedication": "💎",
+            "survivor": "🛡️",
+            "comeback": "🔄"
+        }
+        
+        achievement_display = " ".join([achievement_badges.get(a, "🏆") for a in achievements_list[:5]])
+        
+        status_section = f"""## 🐾 My GitHub Pet
+
+{pet_emoji} **Stage:** {pet_data['current_stage']} {health_emoji}  
+📅 **Days Alive:** {pet_data['days_alive']}  
+⭐ **Experience:** {pet_data['total_experience']}  
+💓 **Health:** {pet_data.get('health_state', 'HEALTHY')}  
+🏆 **Best Streak:** {pet_data['best_streak']} days  
+💻 **Total Commits:** {pet_data['total_commits']}  
+🎖️ **Achievements:** {achievement_display if achievement_display else 'None yet'}  
+
+*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}*
+
+---
+"""
+        
+        readme_path = 'README.md'
+        if os.path.exists(readme_path):
+            with open(readme_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Check if pet section exists
+            if '## 🐾 My GitHub Pet' in content:
+                lines = content.split('\n')
+                start_idx = None
+                end_idx = None
+                
+                for i, line in enumerate(lines):
+                    if line.startswith('## 🐾 My GitHub Pet'):
+                        start_idx = i
+                    elif start_idx is not None and line.startswith('---'):
+                        end_idx = i + 1
+                        break
+                
+                if start_idx is not None:
+                    if end_idx is None:
+                        # No ending delimiter found, look for next section
+                        for i in range(start_idx + 1, len(lines)):
+                            if lines[i].startswith('##'):
+                                end_idx = i
+                                break
+                        if end_idx is None:
+                            end_idx = len(lines)
+                    
+                    # Replace the section
+                    new_lines = lines[:start_idx] + status_section.strip().split('\n') + lines[end_idx:]
+                    content = '\n'.join(new_lines)
+                else:
+                    # Section marker found but couldn't determine boundaries, prepend
+                    content = status_section + content
+            else:
+                # No pet section found, prepend to README
+                content = status_section + content
+        else:
+            # No README exists, create with pet section
+            content = status_section
+        
+        # Write updated README
+        with open(readme_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+        print("README updated with pet status")
+        return True
+        
+    except Exception as e:
+        print(f"Error updating README: {e}")
+        return False
+
 def check_achievements(pet_data, current_streak, days_alive):
     achievements = pet_data.get("achievements", [])
     new_achievements = []
@@ -542,6 +648,9 @@ def update_pet():
         
         # Save updated data
         save_pet_data(pet_data)
+        
+        # Update README with pet status
+        update_readme(pet_data)
         
         return pet_data
         

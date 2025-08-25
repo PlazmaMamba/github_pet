@@ -1,4 +1,4 @@
-name: GitHub pet Daily Update
+name: GitHub Pet Daily Update
 
 on:
   schedule:
@@ -30,7 +30,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests python-dotenv
     
-    - name: Run pet Update
+    - name: Run Pet Update
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PET_FIRST_USE: ${{ vars.PET_FIRST_USE || '2025-08-25' }}
@@ -38,129 +38,15 @@ jobs:
       run: |
         python pet.py
     
-    - name: Commit and push save file
+    - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add pet_save.json
+        git add pet_save.json README.md
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
           git commit -m "🐾 Daily pet update - $(date +'%Y-%m-%d')"
-          git push
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Update README with Pet Status
-      run: |
-        python - << 'EOF'
-        import json
-        import os
-        from datetime import datetime
-        
-        try:
-            with open('pet_save.json', 'r') as f:
-                pet_data = json.load(f)
-        except:
-            print("No pet save file found")
-            exit(0)
-        
-        stage_emojis = {
-            "EGG": "🥚",
-            "HATCHLING": "🐣", 
-            "YOUNG": "🐤",
-            "ADULT": "🐦",
-            "LEGENDARY": "🦅"
-        }
-        
-        health_indicators = {
-            "HEALTHY": "✨",
-            "GOOD": "😊",
-            "TIRED": "😴",
-            "WEAK": "😵",
-            "CRITICAL": "🆘",
-            "DEAD": "💀"
-        }
-        
-        pet_emoji = stage_emojis.get(pet_data['current_stage'], '🥚')
-        health_emoji = health_indicators.get(pet_data.get('health_state', 'HEALTHY'), '😊')
-        
-        days_since_last = pet_data.get('days_since_last_commit', 0)
-        streak_estimate = 0 if days_since_last > 0 else pet_data.get('best_streak', 0)
-        
-        achievements_list = pet_data.get('achievements', [])
-        achievement_badges = {
-            "first_hatch": "🐣",
-            "week_streak": "🔥",
-            "month_streak": "💫",
-            "ancient": "🏛️",
-            "legendary": "👑",
-            "dedication": "💎",
-            "survivor": "🛡️",
-            "comeback": "🔄"
-        }
-        
-        achievement_display = " ".join([achievement_badges.get(a, "🏆") for a in achievements_list[:5]])
-        
-        status_section = f"""## 🐾 My GitHub pet
-
-{pet_emoji} **Stage:** {pet_data['current_stage']} {health_emoji}  
-📅 **Days Alive:** {pet_data['days_alive']}  
-⭐ **Experience:** {pet_data['total_experience']}  
-💓 **Health:** {pet_data.get('health_state', 'HEALTHY')}  
-🏆 **Best Streak:** {pet_data['best_streak']} days  
-💻 **Total Commits:** {pet_data['total_commits']}  
-🎖️ **Achievements:** {achievement_display if achievement_display else 'None yet'}  
-
-*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}*
-
----
-"""
-        
-        readme_path = 'README.md'
-        if os.path.exists(readme_path):
-            with open(readme_path, 'r') as f:
-                content = f.read()
-            
-            if '## 🐾 My GitHub pet' in content:
-                lines = content.split('\n')
-                start_idx = None
-                end_idx = None
-                
-                for i, line in enumerate(lines):
-                    if line.startswith('## 🐾 My GitHub pet'):
-                        start_idx = i
-                    elif start_idx is not None and line.startswith('---'):
-                        end_idx = i + 1
-                        break
-                
-                if start_idx is not None:
-                    if end_idx is None:
-                        end_idx = len(lines)
-                    
-                    new_lines = lines[:start_idx] + status_section.strip().split('\n') + lines[end_idx:]
-                    content = '\n'.join(new_lines)
-                else:
-                    content = status_section + content
-            else:
-                content = status_section + content
-        else:
-            content = status_section
-        
-        with open(readme_path, 'w') as f:
-            f.write(content)
-            
-        print("README updated with pet status")
-        EOF
-    
-    - name: Commit README update
-      run: |
-        git add README.md
-        if git diff --staged --quiet; then
-          echo "No README changes to commit"
-        else
-          git commit -m "📝 Update README with pet status"
           git push
         fi
       env:
