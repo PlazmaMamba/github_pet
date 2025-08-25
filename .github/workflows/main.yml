@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests python-dotenv
+        pip install requests python-dotenv dotenv
     
     - name: Run Pet Update
       env:
@@ -36,7 +36,7 @@ jobs:
         PET_FIRST_USE: ${{ vars.PET_FIRST_USE || '2025-08-25' }}
         SAVE_FILE_PATH: 'pet_save.json'
       run: |
-        python pet.py
+        python main.py
     
     - name: Commit and push changes
       run: |
