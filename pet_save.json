@@ -1,25 +1,25 @@
 {
-  "days_alive": 15,
+  "days_alive": 16,
   "total_experience": 60,
   "current_stage": "EGG",
-  "health_state": "CRITICAL",
-  "days_since_last_commit": 14,
-  "days_in_current_stage": 15,
+  "health_state": "DEAD",
+  "days_since_last_commit": 15,
+  "days_in_current_stage": 16,
   "stage_stability": 0,
   "evolution_history": [],
-  "last_update": "2025-09-08",
+  "last_update": "2025-09-09",
   "is_first_run": false,
   "best_streak": 1,
   "total_commits": 262,
   "stage_days": {
-    "EGG": 15,
+    "EGG": 16,
     "HATCHLING": 0,
     "YOUNG": 0,
     "ADULT": 0,
     "LEGENDARY": 0
   },
   "achievements": [],
-  "devolution_warnings": 11,
+  "devolution_warnings": 12,
   "last_commit_date": "2025-08-25",
   "consecutive_inactive_days": 3
 }
