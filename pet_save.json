@@ -1,25 +1,37 @@
 {
-  "days_alive": 37,
-  "total_experience": 60,
-  "current_stage": "EGG",
-  "health_state": "DEAD",
-  "days_since_last_commit": 36,
-  "days_in_current_stage": 37,
+  "days_alive": 38,
+  "total_experience": 70,
+  "current_stage": "HATCHLING",
+  "health_state": "GOOD",
+  "days_since_last_commit": 1,
+  "days_in_current_stage": 0,
   "stage_stability": 0,
-  "evolution_history": [],
-  "last_update": "2025-09-30",
+  "evolution_history": [
+    {
+      "date": "2025-10-01",
+      "from_stage": "EGG",
+      "to_stage": "HATCHLING",
+      "days_alive": 38,
+      "experience": 70,
+      "reason": "evolution"
+    }
+  ],
+  "last_update": "2025-10-01",
   "is_first_run": false,
   "best_streak": 1,
-  "total_commits": 259,
+  "total_commits": 260,
   "stage_days": {
     "EGG": 37,
-    "HATCHLING": 0,
+    "HATCHLING": 1,
     "YOUNG": 0,
     "ADULT": 0,
     "LEGENDARY": 0
   },
-  "achievements": [],
+  "achievements": [
+    "first_hatch",
+    "comeback"
+  ],
   "devolution_warnings": 33,
   "last_commit_date": "2025-08-25",
-  "consecutive_inactive_days": 3
+  "consecutive_inactive_days": 1
 }
