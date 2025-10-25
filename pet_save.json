@@ -1,10 +1,10 @@
 {
-  "days_alive": 61,
-  "total_experience": 214,
+  "days_alive": 62,
+  "total_experience": 216,
   "current_stage": "EGG",
   "health_state": "CRITICAL",
-  "days_since_last_commit": 11,
-  "days_in_current_stage": 3,
+  "days_since_last_commit": 12,
+  "days_in_current_stage": 4,
   "stage_stability": 0,
   "evolution_history": [
     {
@@ -23,12 +23,12 @@
       "days_neglected": 8
     }
   ],
-  "last_update": "2025-10-24",
+  "last_update": "2025-10-25",
   "is_first_run": false,
   "best_streak": 1,
-  "total_commits": 243,
+  "total_commits": 237,
   "stage_days": {
-    "EGG": 41,
+    "EGG": 42,
     "HATCHLING": 20,
     "YOUNG": 0,
     "ADULT": 0,
@@ -38,7 +38,7 @@
     "first_hatch",
     "comeback"
   ],
-  "devolution_warnings": 3,
+  "devolution_warnings": 4,
   "last_commit_date": "2025-08-25",
   "consecutive_inactive_days": 8
 }
